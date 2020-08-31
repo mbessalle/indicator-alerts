@@ -1,0 +1,27 @@
+{
+  "name": "indicator-alerts",
+  "version": "1.0.0",
+  "description": "buy and sell signals based on the alignment and signal of certain key indicators",
+  "main": "index.js",
+  "dependencies": {
+    "binance-api-node": "^0.10.4",
+    "dotenv": "^8.2.0",
+    "talib": "^1.1.3",
+    "tulind": "^0.8.18"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbessalle/indicator-alerts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbessalle/indicator-alerts/issues"
+  },
+  "homepage": "https://github.com/mbessalle/indicator-alerts#readme"
+}
