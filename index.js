@@ -1,12 +1,12 @@
 require("dotenv").config();
 const Binance = require("binance-api-node").default;
-var tulind = require('tulind');
-const express = require('express')
-const app = express()
-const port = 3000
+var tulind = require("tulind");
+const express = require("express");
+const app = express();
+const port = 3000;
 
 const client = Binance();
-
+let sma_results;
 // Authenticated client, can make signed calls
 const client2 = Binance({
   apiKey: process.env.API_KEY,
@@ -14,34 +14,37 @@ const client2 = Binance({
 });
 
 async function main() {
-  console.log(await client.time());
+  // console.log(await client.time());
   const candles = await client.candles({
-    symbol: "ETHBTC",
-    interval: "30m",
+    symbol: "BTCUSDT",
+    interval: "1w",
     limit: "1000",
   });
+  console.log(candles);
+  const data = candles.map((candle) => ({
+    price: parseFloat(candle.close),
+    time: candle.closeTime,
+  }));
 
-  const closes = candles.map((candle) => parseFloat(candle.close));
-  console.log(closes)
-  app.get('/', (req, res) => {
-    res.append('Access-Control-Allow-Origin', '*').json(closes)
-  })
-
-  
-  // tulind.indicators.sma.indicator([closes], [3], function(err, results) {
-  //   console.log("Result of sma is:");
-  //   console.log(results[0]);
-  // });
-
-  tulind.indicators.macd.indicator([closes], [12, 26, 9], function(err, results) {
-    console.log("Result of MACD is:");
-    console.log(results);
+  app.get("/", (req, res) => {
+    res.append("Access-Control-Allow-Origin", "*").json(data);
   });
 
+  
+  const closes = candles.map((candle) => parseFloat(candle.close));
+
+ tulind.indicators.sma.indicator([closes], [21], function(err, results) {
+    console.log("Result of sma is:");
+    sma_results = results[0];
+    console.log(sma_results)
+  });
+  app.get("/sma", (req, res) => {
+    res.append("Access-Control-Allow-Origin", "*").json(sma_results);
+  });
 }
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
 
 main();
